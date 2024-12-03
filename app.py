@@ -4,6 +4,7 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from PIL import Image
 import gdown
+from PIL import ImageOps
 
 # Download the model from Google Drive
 url = "https://drive.google.com/uc?id=1ayV0rqOLwAP1MEfSTIR4WuckewbciHD5"
