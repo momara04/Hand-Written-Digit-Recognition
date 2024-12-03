@@ -30,17 +30,23 @@ canvas_result = st_canvas(
 )
 
 # Process the canvas drawing
+# Process the canvas drawing
 if canvas_result.image_data is not None:
     # Convert the 280x280 drawing to 28x28 for the model
     image = Image.fromarray((canvas_result.image_data[:, :, 0] * 255).astype('uint8'))  # Extract grayscale
     image = image.resize((28, 28))  # Resize to 28x28
     image_array = np.array(image).reshape(1, 28, 28, 1) / 255.0  # Normalize pixel values
-    
-    st.image(image, caption="Your Digit", width=150)
-    
-    # Make prediction
-    prediction = model.predict(image_array).argmax()
-    st.write(f"### Predicted Digit: {prediction}")
+
+    # Check if the image contains meaningful input (non-zero pixels)
+    if np.sum(image_array) > 0:
+        st.image(image, caption="Your Digit", width=150)
+
+        # Make prediction
+        prediction = model.predict(image_array).argmax()
+        st.write(f"### Predicted Digit: {prediction}")
+    else:
+        st.write("Please draw a digit on the canvas!")
+
 
 # Footer
 st.write("Built with [Streamlit](https://streamlit.io) and TensorFlow")
