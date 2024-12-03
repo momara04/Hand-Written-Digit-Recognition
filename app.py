@@ -30,15 +30,15 @@ canvas_result = st_canvas(
     key="canvas",
 )
 
-# Process the canvas drawing
+# Preprocessing
 if canvas_result.image_data is not None:
     # Convert the canvas to grayscale and invert colors
     image = Image.fromarray((canvas_result.image_data[:, :, 0] * 255).astype('uint8')).convert("L")
     image = ImageOps.invert(image)  # Invert colors
 
-    # Resize to 28x28 while maintaining aspect ratio
-    image = image.resize((28, 28), Image.ANTIALIAS)
-    
+    # Resize to 28x28 while maintaining quality
+    image = image.resize((28, 28), Image.Resampling.LANCZOS)
+
     # Enhance contrast
     image = ImageOps.autocontrast(image)
 
@@ -54,6 +54,7 @@ if canvas_result.image_data is not None:
         st.write(f"### Predicted Digit: {prediction}")
     else:
         st.write("Please draw a digit on the canvas!")
+
 
 
 
