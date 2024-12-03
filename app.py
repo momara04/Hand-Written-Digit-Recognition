@@ -4,6 +4,11 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from PIL import Image
 
+import os
+st.write("Files in the current directory:")
+st.write(os.listdir("."))
+
+
 # Load the trained model
 model = load_model('mnist_cnn_model.h5')
 
