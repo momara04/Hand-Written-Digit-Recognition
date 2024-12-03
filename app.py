@@ -30,12 +30,19 @@ canvas_result = st_canvas(
 )
 
 # Process the canvas drawing
-# Process the canvas drawing
 if canvas_result.image_data is not None:
-    # Convert the 280x280 drawing to 28x28 for the model
-    image = Image.fromarray((canvas_result.image_data[:, :, 0] * 255).astype('uint8'))  # Extract grayscale
-    image = image.resize((28, 28))  # Resize to 28x28
-    image_array = np.array(image).reshape(1, 28, 28, 1) / 255.0  # Normalize pixel values
+    # Convert the canvas to grayscale and invert colors
+    image = Image.fromarray((canvas_result.image_data[:, :, 0] * 255).astype('uint8')).convert("L")
+    image = ImageOps.invert(image)  # Invert colors
+
+    # Resize to 28x28 while maintaining aspect ratio
+    image = image.resize((28, 28), Image.ANTIALIAS)
+    
+    # Enhance contrast
+    image = ImageOps.autocontrast(image)
+
+    # Normalize pixel values to [0, 1]
+    image_array = np.array(image).reshape(1, 28, 28, 1) / 255.0
 
     # Check if the image contains meaningful input (non-zero pixels)
     if np.sum(image_array) > 0:
@@ -46,6 +53,7 @@ if canvas_result.image_data is not None:
         st.write(f"### Predicted Digit: {prediction}")
     else:
         st.write("Please draw a digit on the canvas!")
+
 
 
 # Footer
