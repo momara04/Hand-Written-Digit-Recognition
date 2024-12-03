@@ -3,14 +3,15 @@ from streamlit_drawable_canvas import st_canvas
 import numpy as np
 from tensorflow.keras.models import load_model
 from PIL import Image
+import gdown
 
-import os
-st.write("Files in the current directory:")
-st.write(os.listdir("."))
+# Download the model from Google Drive
+url = "https://drive.google.com/uc?id=1ayV0rqOLwAP1MEfSTIR4WuckewbciHD5"
+output = "mnist_cnn_model.h5"
+gdown.download(url, output, quiet=False)
 
-
-# Load the trained model
-model = load_model('mnist_cnn_model.h5')
+# Load the model
+model = load_model(output)
 
 # App title
 st.title("Handwritten Digit Recognition")
@@ -34,7 +35,9 @@ if canvas_result.image_data is not None:
     image = Image.fromarray((canvas_result.image_data[:, :, 0] * 255).astype('uint8'))  # Extract grayscale
     image = image.resize((28, 28))  # Resize to 28x28
     image_array = np.array(image).reshape(1, 28, 28, 1) / 255.0  # Normalize pixel values
-
+    
+    st.image(image, caption="Your Digit", width=150)
+    
     # Make prediction
     prediction = model.predict(image_array).argmax()
     st.write(f"### Predicted Digit: {prediction}")
