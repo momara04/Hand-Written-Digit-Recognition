@@ -1,18 +1,11 @@
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
-import numpy as np
 from tensorflow.keras.models import load_model
-from PIL import Image
-import gdown
-from PIL import ImageOps
+from PIL import Image, ImageOps
+import numpy as np
 
-# Download the model from Google Drive
-url = "https://drive.google.com/uc?id=1ayV0rqOLwAP1MEfSTIR4WuckewbciHD5"
-output = "mnist_cnn_model.h5"
-gdown.download(url, output, quiet=False)
-
-# Load the model
-model = load_model(output)
+# Load the model directly from the repository
+model = load_model("mnist_cnn_model.h5")
 
 # App title
 st.title("Handwritten Digit Recognition")
@@ -30,10 +23,10 @@ canvas_result = st_canvas(
     key="canvas",
 )
 
-# Preprocessing
+# Process the canvas drawing
 if canvas_result.image_data is not None:
     # Convert the canvas to grayscale and invert colors
-    image = Image.fromarray((canvas_result.image_data[:, :, 0] * 255).astype('uint8')).convert("L")
+    image = Image.fromarray((canvas_result.image_data[:, :, 0] * 255).astype("uint8")).convert("L")
     image = ImageOps.invert(image)  # Invert colors
 
     # Resize to 28x28 while maintaining quality
@@ -54,9 +47,3 @@ if canvas_result.image_data is not None:
         st.write(f"### Predicted Digit: {prediction}")
     else:
         st.write("Please draw a digit on the canvas!")
-
-
-
-
-# Footer
-st.write("Built with [Streamlit](https://streamlit.io) and TensorFlow")
