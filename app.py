@@ -5,7 +5,7 @@ from PIL import Image, ImageOps
 import numpy as np
 
 # Load the model directly from the repository
-model = load_model("mnist_cnn_model.h5")
+model = load_model("mnist_cnn_model.keras")
 
 # App title
 st.title("Handwritten Digit Recognition")
